@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+    Injects the vendor + warehouse area info block on the product detail page,
+    placed right under the product name inside the main info column.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="product.info.main">
+            <block class="Bixbox\OrderSplit\Block\Product\VendorInfo"
+                   name="bixbox.vendor.info.pdp"
+                   template="Bixbox_OrderSplit::product/view/vendor_info.phtml"
+                   after="product.info.name"/>
+        </referenceContainer>
+    </body>
+</page>

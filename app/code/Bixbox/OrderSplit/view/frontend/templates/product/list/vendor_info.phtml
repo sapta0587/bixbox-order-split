@@ -1,0 +1,27 @@
+<?php
+/**
+ * Bixbox_OrderSplit
+ *
+ * Per-product vendor + warehouse line, rendered inside the product list loop.
+ * The product is attached by the parent list template via $block->setProduct().
+ *
+ * @var \Bixbox\OrderSplit\Block\Product\VendorInfo $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php if ($block->canShowOnProductList()): ?>
+    <div class="bixbox-vendor-info product-item-vendor">
+        <?php if ($vendor = $block->getVendor()): ?>
+            <span class="vendor">
+                <strong><?= $escaper->escapeHtml(__('Vendor')) ?>:</strong>
+                <?= $escaper->escapeHtml($vendor) ?>
+            </span>
+        <?php endif; ?>
+        <?php if ($warehouse = $block->getWarehouseArea()): ?>
+            <span class="warehouse-area">
+                <strong><?= $escaper->escapeHtml(__('Warehouse Area')) ?>:</strong>
+                <?= $escaper->escapeHtml($warehouse) ?>
+            </span>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

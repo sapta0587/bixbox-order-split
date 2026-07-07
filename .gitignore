@@ -1,0 +1,24 @@
+# Ignore everything by default; this repo ships ONLY the Bixbox_OrderSplit
+# Magento 2 module + root test scaffolding.
+/*
+
+# --- Whitelist root project files ---
+!/.gitignore
+!/README.md
+!/composer.json
+!/phpunit.xml.dist
+!/app/
+
+# --- Within app/, expose only app/code/Bixbox/OrderSplit/ ---
+/app/*
+!/app/code/
+/app/code/*
+!/app/code/Bixbox/
+/app/code/Bixbox/*
+!/app/code/Bixbox/OrderSplit/
+
+# --- Always ignore these regardless of location ---
+/vendor/
+/.phpunit.result.cache
+/.phpunit.cache/
+/node_modules/

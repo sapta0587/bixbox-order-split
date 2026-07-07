@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+    Global DI configuration. The QuoteManagement around-plugin runs for both
+    frontend and admin order placement (splitting applies in both areas).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Bixbox\OrderSplit\Model\Quote\QuoteDuplicatorInterface"
+                type="Bixbox\OrderSplit\Model\Quote\QuoteDuplicator"/>
+
+    <type name="Magento\Quote\Model\QuoteManagement">
+        <plugin name="bixbox_ordersplit_quote_management"
+                type="Bixbox\OrderSplit\Plugin\Quote\QuoteManagementPlugin"
+                sortOrder="100"/>
+    </type>
+</config>

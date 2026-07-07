@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+    Default module configuration. Store admins can override these values
+    from Stores > Configuration > Bixbox > Order Split.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/config.xsd">
+    <default>
+        <bixbox_ordersplit>
+            <general>
+                <!-- Master switch for the order-splitting behaviour. -->
+                <enabled>1</enabled>
+            </general>
+            <display>
+                <!-- Show vendor + warehouse area on the product detail page. -->
+                <on_product_view>1</on_product_view>
+                <!-- Show vendor + warehouse area on the product list page. -->
+                <on_product_list>1</on_product_list>
+            </display>
+            <split>
+                <!-- Split by catalog category. -->
+                <by_category>1</by_category>
+                <!-- Split by vendor. -->
+                <by_vendor>1</by_vendor>
+                <!-- Split by vendor warehouse area. -->
+                <by_warehouse>1</by_warehouse>
+            </split>
+        </bixbox_ordersplit>
+    </default>
+
+    <!--
+        Make `vendor` and `warehouse_area` part of the product attributes that
+        Magento loads on every quote item's product. This way the order-split
+        logic can read them directly from $item->getProduct() without extra
+        DB queries. Merges with Magento_Quote's own <quote><item> node.
+    -->
+    <quote>
+        <item>
+            <product_attributes>
+                <attributes>
+                    <vendor/>
+                    <warehouse_area/>
+                </attributes>
+            </product_attributes>
+        </item>
+    </quote>
+</config>

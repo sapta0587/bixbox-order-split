@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- ACL rule so admin users with the right permission can edit the config. -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Bixbox_OrderSplit::config" title="Bixbox Order Split Configuration" sortOrder="60"/>
+            </resource>
+        </resources>
+    </acl>
+</config>

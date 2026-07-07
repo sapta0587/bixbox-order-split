@@ -1,0 +1,27 @@
+<?php
+/**
+ * Bixbox_OrderSplit
+ *
+ * Shown on the product detail page, under the product name. Renders only when
+ * the admin flag is on AND the product has at least one of the two values.
+ *
+ * @var \Bixbox\OrderSplit\Block\Product\VendorInfo $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php if ($block->canShowOnProductView()): ?>
+    <div class="bixbox-vendor-info product-info-vendor">
+        <?php if ($vendor = $block->getVendor()): ?>
+            <div class="vendor">
+                <strong><?= $escaper->escapeHtml(__('Vendor')) ?>:</strong>
+                <span><?= $escaper->escapeHtml($vendor) ?></span>
+            </div>
+        <?php endif; ?>
+        <?php if ($warehouse = $block->getWarehouseArea()): ?>
+            <div class="warehouse-area">
+                <strong><?= $escaper->escapeHtml(__('Warehouse Area')) ?>:</strong>
+                <span><?= $escaper->escapeHtml($warehouse) ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

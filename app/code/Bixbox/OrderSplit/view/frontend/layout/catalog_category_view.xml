@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+    Product list page (category view).
+
+    The default Luma `Magento_Catalog::product/list.phtml` has no extension
+    point for per-product extra attributes, so we override the template with
+    a thin copy (Bixbox_OrderSplit::product/list.phtml) that renders a child
+    `bixbox.vendor.info.list` block under each product name. The child block
+    is attached here so the template can fetch it via $block->getChildBlock().
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="category.products.list">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Bixbox_OrderSplit::product/list.phtml</argument>
+            </action>
+            <block class="Bixbox\OrderSplit\Block\Product\VendorInfo"
+                   name="bixbox.vendor.info.list"
+                   template="Bixbox_OrderSplit::product/list/vendor_info.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,27 @@
+{
+    "name": "bixbox/module-order-split",
+    "description": "Bixbox_OrderSplit - Magento 2 module: display vendor & warehouse area on product pages and split orders by (category, vendor, warehouse area).",
+    "type": "magento2-module",
+    "license": "MIT",
+    "version": "1.0.0",
+    "require": {
+        "php": "~8.1.0||~8.2.0||~8.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "suggest": {
+        "magento/module-catalog": "Provides the product EAV the module reads from. Required when installed into a Magento 2 store; not needed to run the standalone unit tests."
+    },
+    "autoload": {
+        "psr-4": {
+            "Bixbox\\OrderSplit\\": "app/code/Bixbox/OrderSplit/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bixbox\\OrderSplit\\Test\\": "app/code/Bixbox/OrderSplit/Test/"
+        }
+    },
+    "_comment": "registration.php is intentionally NOT autoloaded here; it is only relevant when the module is installed into a real Magento (see app/code/Bixbox/OrderSplit/composer.json). This keeps the standalone unit-test bootstrap Magento-free."
+}
