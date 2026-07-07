@@ -36,29 +36,10 @@ The module ships both behaviours:
 .
 ├── README.md                       ← this file
 ├── composer.json                   ← test-only autoloader (runs the unit tests without Magento)
-├── phpunit.xml.dist                ← PHPUnit config
-└── app/code/Bixbox/OrderSplit/     ← the Magento 2 module (the actual deliverable)
-    ├── composer.json               ← module composer.json for distribution into a store
-    ├── registration.php
-    ├── etc/
-    │   ├── module.xml
-    │   ├── config.xml              ← default config + quote-item attribute exposure
-    │   ├── system.xml              ← admin config section
-    │   ├── acl.xml
-    │   └── di.xml                  ← QuoteManagement plugin + preference
-    ├── Setup/Patch/Data/
-    │   └── AddVendorAndWarehouseAttributes.php
-    ├── Model/
-    │   ├── Config.php
-    │   ├── OrderSplitter.php       ← pure grouping logic (static) + Magento glue
-    │   ├── ProductAttribute/Provider.php
-    │   └── Quote/{QuoteDuplicator,QuoteDuplicatorInterface}.php
-    ├── Plugin/Quote/QuoteManagementPlugin.php
-    ├── Block/Product/VendorInfo.php
-    ├── view/frontend/
-    │   ├── layout/{catalog_product_view,catalog_category_view}.xml
-    │   └── templates/product/{list.phtml, view/vendor_info.phtml, list/vendor_info.phtml}
-    └── Test/Unit/Model/OrderSplitterTest.php
+├── phpunit.xml.dist                ← PHPUnit config (runs both Bixbox modules' tests)
+└── app/code/Bixbox/
+    ├── OrderSplit/                 ← Core task module (this README, above)
+    └── PaymentWebhook/             ← Bonus task module (REST webhook handler; see its own README)
 ```
 
 The repository ships **only the module** (plus the test scaffolding at the
@@ -236,10 +217,21 @@ same instance:
 
 ## Limitations / future work
 
-- **Bonus task (payment webhook)** is intentionally not included here; the
-  brief splits it into a separate, optional task.
 - Bundle products with complex option trees are re-added via `buyRequest`; if a
   bundle's buy request does not survive cloning (rare), a fallback to
   re-building the request from option codes would be added.
 - No MSI-aware logic; Magento's default inventory reservations apply to each
   sub-order.
+
+---
+
+## Bonus task: payment-gateway webhook
+
+The optional **bonus task** (a REST webhook handler for external payment
+gateways with dynamic payloads, order lookup by `payment_id`, state
+transition and idempotent replay handling) is implemented in a **separate
+module**, [`Bixbox_PaymentWebhook`](app/code/Bixbox/PaymentWebhook/README.md),
+which ships in this same repo under `app/code/Bixbox/PaymentWebhook/`. It is
+independent of `Bixbox_OrderSplit` (no code or schema dependency) and can be
+installed on its own. See its own README for the endpoint contract, schema,
+status-mapping table and assumptions.

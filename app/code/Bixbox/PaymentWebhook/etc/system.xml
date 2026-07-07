@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+    Admin config section. Stores -> Configuration -> Bixbox -> Payment Webhook.
+
+    - Enable: master switch (fail-closed: when disabled the endpoint 404s).
+    - Shared Secret: the token the gateway must send in the
+      X-Bixbox-Webhook-Token header. Empty = refuse all (fail-closed).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/system.xsd">
+    <system>
+        <tab id="bixbox" translate="label" sortOrder="200">
+            <label>Bixbox</label>
+        </tab>
+
+        <section id="bixbox_paymentwebhook" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Webhook</label>
+            <tab>bixbox</tab>
+            <resource>Bixbox_PaymentWebhook::config</resource>
+
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Webhook Endpoint</label>
+                    <comment>Master switch. When disabled the POST /V1/bixbox/payment-webhook route refuses all calls.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="security" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Security</label>
+                <field id="shared_secret" translate="label comment" type="password" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Shared Secret</label>
+                    <comment>The token the gateway must send in the X-Bixbox-Webhook-Token header. Empty (fail-closed) refuses all calls.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

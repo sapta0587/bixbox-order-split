@@ -15,13 +15,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Bixbox\\OrderSplit\\": "app/code/Bixbox/OrderSplit/"
+            "Bixbox\\OrderSplit\\": "app/code/Bixbox/OrderSplit/",
+            "Bixbox\\PaymentWebhook\\": "app/code/Bixbox/PaymentWebhook/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Bixbox\\OrderSplit\\Test\\": "app/code/Bixbox/OrderSplit/Test/"
+            "Bixbox\\OrderSplit\\Test\\": "app/code/Bixbox/OrderSplit/Test/",
+            "Bixbox\\PaymentWebhook\\Test\\": "app/code/Bixbox/PaymentWebhook/Test/"
         }
     },
-    "_comment": "registration.php is intentionally NOT autoloaded here; it is only relevant when the module is installed into a real Magento (see app/code/Bixbox/OrderSplit/composer.json). This keeps the standalone unit-test bootstrap Magento-free."
+    "_comment_order": "registration.php is intentionally NOT autoloaded here; it is only relevant when the module is installed into a real Magento (see the module composer.json files). This keeps the standalone unit-test bootstrap Magento-free."
 }

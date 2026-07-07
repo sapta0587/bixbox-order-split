@@ -5,8 +5,8 @@
          cacheResultFile=".phpunit.result.cache"
          bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="Bixbox OrderSplit Unit Tests">
-            <directory>app/code/Bixbox/OrderSplit/Test/Unit</directory>
+        <testsuite name="Bixbox Unit Tests">
+            <directory>app/code/Bixbox/*/Test/Unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+    Default module configuration. The shared secret is empty by default;
+    it MUST be set in admin before the endpoint accepts any webhook (an empty
+    secret refuses all calls, fail-closed).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/system.xsd">
+    <default>
+        <bixbox_paymentwebhook>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <security>
+                <shared_secret></shared_secret>
+            </security>
+        </bixbox_paymentwebhook>
+    </default>
+</config>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+    Frontend route for the payment-gateway webhook endpoint.
+
+    POST /bixbox/webhook
+
+    A frontend controller (rather than webapi.xml) is used on purpose: webapi
+    requires the body to be wrapped under the service-method parameter name
+    (e.g. {"payload":{...}}), but payment gateways POST their own raw dynamic
+    JSON. The controller reads php://input directly so the gateway's body is
+    accepted verbatim, and the idempotency hash is computed from the decoded
+    payload (canonicalized, so key-order / whitespace variation still collides).
+
+    frontName "bixbox" + controller "webhook" + default action "index" =>
+    URL is /bixbox/webhook (handled by Controller/Webhook/Index.php).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="bixbox_payment_webhook" frontName="bixbox">
+            <module name="Bixbox_PaymentWebhook"/>
+        </route>
+    </router>
+</config>

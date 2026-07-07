@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+    Global DI configuration. Maps the idempotency-log data + repository
+    interfaces to their implementations.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Bixbox\PaymentWebhook\Api\Data\WebhookLogInterface"
+                type="Bixbox\PaymentWebhook\Model\Data\WebhookLog"/>
+
+    <preference for="Bixbox\PaymentWebhook\Api\WebhookLogRepositoryInterface"
+                type="Bixbox\PaymentWebhook\Model\WebhookLogRepository"/>
+</config>
+

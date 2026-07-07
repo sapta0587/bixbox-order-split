@@ -16,6 +16,7 @@
 !/app/code/Bixbox/
 /app/code/Bixbox/*
 !/app/code/Bixbox/OrderSplit/
+!/app/code/Bixbox/PaymentWebhook/
 
 # --- Always ignore these regardless of location ---
 /vendor/

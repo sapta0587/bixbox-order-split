@@ -1,0 +1,31 @@
+{
+    "bixbox_payment_webhook_log": {
+        "column": {
+            "log_id": true,
+            "payment_id": true,
+            "payload_hash": true,
+            "status": true,
+            "action": true,
+            "order_id": true,
+            "order_state": true,
+            "payload": true,
+            "is_duplicate": true,
+            "received_at": true
+        },
+        "index": {
+            "BIXBOX_WEBHOOK_LOG_PAYMENT_ID": true,
+            "BIXBOX_WEBHOOK_LOG_PAYLOAD_HASH": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "sales_order_payment": {
+        "column": {
+            "bixbox_payment_id": true
+        },
+        "index": {
+            "BIXBOX_SALES_ORDER_PAYMENT_BIXBOX_PAYMENT_ID": true
+        }
+    }
+}

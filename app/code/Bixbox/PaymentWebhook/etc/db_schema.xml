@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+    Declarative schema.
+
+    1. bixbox_payment_webhook_log: idempotency ledger. One row per processed
+       webhook. The unique index on payload_hash makes exact-replay dedupe a
+       single INSERT guarded by the unique constraint (first writer wins).
+
+    2. sales_order_payment.bixbox_payment_id: where the gateway's payment_id
+       is persisted so the webhook can look the order up. Populated by the
+       gateway integration at order-placement time (out of this module's
+       scope; the integration test sets it manually).
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="bixbox_payment_webhook_log" engine="innodb" resource="default">
+        <column xsi:type="bigint" name="log_id" padding="20" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="payment_id" length="128" nullable="true"/>
+        <column xsi:type="varchar" name="payload_hash" length="64" nullable="false"/>
+        <column xsi:type="varchar" name="status" length="32" nullable="true" comment="gateway status as received"/>
+        <column xsi:type="varchar" name="action" length="16" nullable="true" comment="applied action: invoice|cancel|none"/>
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="true" comment="sales_order.entity_id"/>
+        <column xsi:type="varchar" name="order_state" length="32" nullable="true" comment="resulting order state"/>
+        <column xsi:type="text" name="payload" nullable="true" comment="raw decoded payload, for audit"/>
+        <column xsi:type="boolean" name="is_duplicate" nullable="false" default="0" comment="1 if a prior identical payload was already processed"/>
+        <column xsi:type="timestamp" name="received_at" on_update="false" default="CURRENT_TIMESTAMP" nullable="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="BIXBOX_WEBHOOK_LOG_PAYLOAD_HASH">
+            <column name="payload_hash"/>
+        </constraint>
+        <index referenceId="BIXBOX_WEBHOOK_LOG_PAYMENT_ID" indexType="btree">
+            <column name="payment_id"/>
+        </index>
+    </table>
+
+    <table name="sales_order_payment">
+        <column xsi:type="varchar" name="bixbox_payment_id" length="128" nullable="true" comment="Gateway payment_id; webhook looks the order up by this"/>
+    </table>
+
+    <table name="sales_order_payment">
+        <index referenceId="BIXBOX_SALES_ORDER_PAYMENT_BIXBOX_PAYMENT_ID" indexType="btree">
+            <column name="bixbox_payment_id"/>
+        </index>
+    </table>
+</schema>
