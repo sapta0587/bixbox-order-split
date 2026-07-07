@@ -22,8 +22,9 @@ The module ships both behaviours:
 
 ## Requirements & compatibility
 
-- **Magento 2.4.6+** (latest LTS). Developed and unit-tested on PHP 8.3.
-- **PHP 8.1 / 8.2 / 8.3**.
+- **Magento 2.4.6+** (latest LTS). Developed and unit-tested on PHP 8.3;
+  integration-verified against **Mage-OS 3.0.0** (Magento 2.4.7-based) on **PHP 8.5**.
+- **PHP 8.1 / 8.2 / 8.3 / 8.4 / 8.5**.
 - Depends on `Magento_Catalog`, `Magento_Quote`, `Magento_Checkout`,
   `Magento_Sales` (declared in `etc/module.xml` `sequence`).
 
@@ -204,19 +205,32 @@ were made (as permitted by the brief):
 
 ## Verification (integration)
 
-A local Magento 2.4.6 instance (via `markshust/docker-magento`) was used to
-verify, against Luma + sample data:
+A local **Mage-OS 3.0.0** instance (Magento-compatible community build, based on
+Magento 2.4.7+) was brought up via `markshust/docker-magento` and used to verify
+the module end-to-end against real Magento data:
 
-- The two attributes appear on the admin product form and are filterable in the
-  product grid.
-- The PDP shows *Vendor* and *Warehouse Area* under the product name.
-- The PLP shows the same info under each product card.
-- Placing an order whose items span 2 vendors produces **2 separate orders**,
-  and the cart is cleared.
+| Check | Result |
+|-------|--------|
+| `bin/magento module:enable Bixbox_OrderSplit` + `setup:upgrade` | ✅ module registers & upgrades cleanly |
+| Data patch creates `vendor` + `warehouse_area` as `select` attributes with seeded demo options + values | ✅ attributes (ids 145/146) + 6 options with value text confirmed in `eav_attribute_option(_value)` |
+| `bin/magento setup:di:compile` (validates plugin + preference + all constructor injections) | ✅ compiled, no DI errors |
+| PHPUnit unit tests (`computeGroups` / `buildKey`) | ✅ 13 tests, 21 assertions |
+| `Provider` resolves vendor / warehouse area / first category from real products, fed into `OrderSplitter::computeGroups` | ✅ 3 products with distinct (category, vendor, warehouse) → **3 distinct groups** with correct composite keys |
 
-*(Reproducing: bring up a Magento 2.4.6 store, drop the module in, run
-`setup:upgrade`, assign vendor/warehouse values to a few sample products, add
-them to the cart and check out.)*
+The live `placeOrder` split (the plugin actually minting N duplicate quotes +
+N orders) and the storefront HTML rendering were not exercised here: the former
+needs a full checkout flow against stock-configured products, and the latter
+needs the storefront domain resolvable. To verify those manually against this
+same instance:
+
+1. Add `bixbox.test` to `/etc/hosts` (the setup script skips this when it can't
+   get sudo): `echo "127.0.0.1 bixbox.test" | sudo tee -a /etc/hosts`.
+2. Re-run `bin/setup-domain bixbox.test` so the SSL cert + base URL are applied.
+3. Open `https://bixbox.test/`, browse a category → the *Vendor* and
+   *Warehouse Area* lines appear under each product; open a product → the same
+   block appears under the name.
+4. Add 2 products from different vendors to the cart, complete checkout → two
+   orders are created in *Sales → Orders* and the cart is cleared.
 
 ---
 
