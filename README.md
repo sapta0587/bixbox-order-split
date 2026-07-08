@@ -127,6 +127,30 @@ The Magento-bound glue (`QuoteManagementPlugin`, `QuoteDuplicator`,
 `Provider`, `VendorInfo`) is verified by integration testing against a running
 Magento 2.4.6 instance (see "Verification" below).
 
+### Verifying the no-split path (single group)
+
+`OrderSplitter::split()` short-circuits and returns `[]` when all quote items
+share one composite key (single group) — the original quote is then placed
+normally with no behaviour change (`QuoteManagementPlugin.php:75-78`). To
+exercise this end-to-end against a live store:
+
+1. Create **two products with identical** (category, vendor, warehouse area)
+   values — e.g. two paper-roll SKUs both assigned to *Paper Rolls* /
+   *Vendor A* / *Warehouse North*. (The bundled `AddVendorAndWarehouseAttributes`
+   data patch seeds `Vendor A` and `Warehouse North` as options, so this is
+   doable from the admin product form with no extra setup.)
+2. Add both products to a cart and check out.
+3. Expect **one order** containing both items — the plugin detects a single
+   group and falls through to the default `placeOrder`.
+
+> **Indexing note:** when creating products programmatically (not via the
+> admin form), reindex `catalog_product_price`, `catalog_category_product` and
+> `catalog_product_category` and flush `block_html` + `full_page` cache before
+> checking the storefront — the PLP filters by the price index, so a missing
+> price-index row keeps the product off the listing even though it exists in
+> the admin grid. The admin form triggers these indexers automatically;
+> raw scripts do not.
+
 ---
 
 ## Assumptions & decisions
