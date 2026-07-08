@@ -197,21 +197,22 @@ the module end-to-end against real Magento data:
 | `bin/magento setup:di:compile` (validates plugin + preference + all constructor injections) | ✅ compiled, no DI errors |
 | PHPUnit unit tests (`computeGroups` / `buildKey`) | ✅ 13 tests, 21 assertions |
 | `Provider` resolves vendor / warehouse area / first category from real products, fed into `OrderSplitter::computeGroups` | ✅ 3 products with distinct (category, vendor, warehouse) → **3 distinct groups** with correct composite keys |
+| Live `placeOrder` split (plugin minting N duplicate quotes + N orders end-to-end) | ✅ a guest quote with BIX-PROD-1 (Vendor A / Warehouse North) + BIX-PROD-2 (Vendor B / Warehouse North) → **2 orders** (#000000012, #000000013); original quote deactivated |
 
-The live `placeOrder` split (the plugin actually minting N duplicate quotes +
-N orders) and the storefront HTML rendering were not exercised here: the former
-needs a full checkout flow against stock-configured products, and the latter
-needs the storefront domain resolvable. To verify those manually against this
-same instance:
+The storefront HTML rendering (PDP/PLP vendor info block) is verified by curl
+against `https://bixbox.test/` (the domain resolves from the Windows host in
+this Docker setup): the `bixbox-vendor-info` block renders under each product
+on both the category list and the product detail pages.
 
-1. Add `bixbox.test` to `/etc/hosts` (the setup script skips this when it can't
-   get sudo): `echo "127.0.0.1 bixbox.test" | sudo tee -a /etc/hosts`.
-2. Re-run `bin/setup-domain bixbox.test` so the SSL cert + base URL are applied.
-3. Open `https://bixbox.test/`, browse a category → the *Vendor* and
-   *Warehouse Area* lines appear under each product; open a product → the same
-   block appears under the name.
-4. Add 2 products from different vendors to the cart, complete checkout → two
-   orders are created in *Sales → Orders* and the cart is cleared.
+> **Note on the shipping-rate fix (commit `5e79226`):** the first end-to-end
+> run surfaced a bug — `QuoteDuplicator` cloned the shipping address and copied
+> `shipping_method` but never set `collectShippingRates`, so the cloned address
+> carried no `quote_shipping_rate` rows and `ShippingMethodValidationRule`
+> rejected every duplicate with *"The shipping method is missing."* When all
+> groups fail the plugin falls back to placing the original quote, producing a
+> single unsplit order. The one-line fix (`setCollectShippingRates(true)` on
+> the cloned address) makes `collectTotals()` request and persist carrier rates
+> so validation passes.
 
 ---
 
