@@ -18,6 +18,9 @@
             </span>
         <?php endif; ?>
         <?php if ($warehouse = $block->getWarehouseArea()): ?>
+            <?php if ($vendor): ?>
+                <br>
+            <?php endif; ?>
             <span class="warehouse-area">
                 <strong><?= $escaper->escapeHtml(__('Warehouse Area')) ?>:</strong>
                 <?= $escaper->escapeHtml($warehouse) ?>

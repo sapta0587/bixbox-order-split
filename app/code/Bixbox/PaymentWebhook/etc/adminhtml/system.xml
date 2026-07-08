@@ -7,7 +7,7 @@
       X-Bixbox-Webhook-Token header. Empty = refuse all (fail-closed).
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/system.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="bixbox" translate="label" sortOrder="200">
             <label>Bixbox</label>
