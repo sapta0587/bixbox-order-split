@@ -198,6 +198,7 @@ the module end-to-end against real Magento data:
 | PHPUnit unit tests (`computeGroups` / `buildKey`) | ✅ 13 tests, 21 assertions |
 | `Provider` resolves vendor / warehouse area / first category from real products, fed into `OrderSplitter::computeGroups` | ✅ 3 products with distinct (category, vendor, warehouse) → **3 distinct groups** with correct composite keys |
 | Live `placeOrder` split (plugin minting N duplicate quotes + N orders end-to-end) | ✅ a guest quote with BIX-PROD-1 (Vendor A / Warehouse North) + BIX-PROD-2 (Vendor B / Warehouse North) → **2 orders** (#000000012, #000000013); original quote deactivated |
+| Live `placeOrder` **no-split path** (single group → original quote placed, plugin returns `[]`) | ✅ a guest quote with BIX-PROD-1 + BIX-PROD-4 (both Paper Rolls / Vendor A / Warehouse North → one composite key) → **1 order** (#000000024); and a mixed quote BIX-PROD-1 + BIX-PROD-4 + BIX-PROD-2 → **2 orders** (PROD-1+4 grouped into #000000025, PROD-2 alone as #000000026) |
 
 The storefront HTML rendering (PDP/PLP vendor info block) is verified by curl
 against `https://bixbox.test/` (the domain resolves from the Windows host in
@@ -218,6 +219,20 @@ on both the category list and the product detail pages.
 
 ## Limitations / future work
 
+- **Checkout success page only references the first sub-order.**
+  `QuoteManagement::placeOrder` has a single-`int` return signature, so the
+  plugin (`QuoteManagementPlugin.php:94`) returns only the first sub-order id
+  via `reset($orderIds)`. Magento's checkout success page and `checkout/session`
+  therefore track that one order as "the last placed order"; the remaining
+  sub-orders are placed and confirmed by email but are **not** surfaced on the
+  success page or in the customer's "My Orders" immediate redirect. This is the
+  Magento-compatible choice (the API contract is one order id), but if the
+  merchant wants the customer to see *all* sub-orders on the success page, a
+  separate enhancement is required — e.g. persisting the sibling order ids on
+  the first order (a custom `related_order_ids` column or the native
+  `sales_order_relation`-style link table) and overriding
+  `checkout_onepage_success.xml` / the success block to render them. The module
+  does **not** do this today.
 - Bundle products with complex option trees are re-added via `buyRequest`; if a
   bundle's buy request does not survive cloning (rare), a fallback to
   re-building the request from option codes would be added.
