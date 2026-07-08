@@ -67,6 +67,7 @@ class QuoteDuplicator implements QuoteDuplicatorInterface
             $clonedShipping = $this->cloneAddress($shipping);
             $clonedShipping->setShippingMethod($shipping->getShippingMethod());
             $clonedShipping->setShippingDescription($shipping->getShippingDescription());
+            $clonedShipping->setCollectShippingRates(true);
             $new->setShippingAddress($clonedShipping);
         }
 
