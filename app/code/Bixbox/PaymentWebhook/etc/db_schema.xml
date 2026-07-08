@@ -37,9 +37,6 @@
 
     <table name="sales_order_payment">
         <column xsi:type="varchar" name="bixbox_payment_id" length="128" nullable="true" comment="Gateway payment_id; webhook looks the order up by this"/>
-    </table>
-
-    <table name="sales_order_payment">
         <index referenceId="BIXBOX_SALES_ORDER_PAYMENT_BIXBOX_PAYMENT_ID" indexType="btree">
             <column name="bixbox_payment_id"/>
         </index>

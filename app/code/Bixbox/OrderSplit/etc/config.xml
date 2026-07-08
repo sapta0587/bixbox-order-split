@@ -27,21 +27,4 @@
             </split>
         </bixbox_ordersplit>
     </default>
-
-    <!--
-        Make `vendor` and `warehouse_area` part of the product attributes that
-        Magento loads on every quote item's product. This way the order-split
-        logic can read them directly from $item->getProduct() without extra
-        DB queries. Merges with Magento_Quote's own <quote><item> node.
-    -->
-    <quote>
-        <item>
-            <product_attributes>
-                <attributes>
-                    <vendor/>
-                    <warehouse_area/>
-                </attributes>
-            </product_attributes>
-        </item>
-    </quote>
 </config>

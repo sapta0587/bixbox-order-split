@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+    Make `vendor` and `warehouse_area` part of the product attributes that
+    Magento loads on every quote item's product. This way the order-split
+    logic can read them directly from $item->getProduct() without extra
+    DB queries. Merges with Magento_Catalog's catalog_attributes pool
+    (the same mechanism Magento_Bundle / Magento_GiftMessage use).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/catalog_attributes.xsd">
+    <group name="quote_item">
+        <attribute name="vendor"/>
+        <attribute name="warehouse_area"/>
+    </group>
+</config>
