@@ -26,8 +26,8 @@ X-Bixbox-Webhook-Token: <shared secret>
 - A **frontend controller** (`Controller/Webhook/Index.php`) is used rather than
   a `webapi.xml` route on purpose: webapi requires the body to be wrapped under
   the service-method parameter name (e.g. `{"payload":{...}}`), but payment
-  gateways POST their own raw dynamic JSON. The controller reads `php://input`
-  directly so the gateway's body is accepted verbatim. It implements
+  gateways POST their own raw dynamic JSON. The controller reads the raw
+  request body (`getContent()`) so the gateway's body is accepted verbatim. It implements
   `HttpPostActionInterface` (GET → 404) and `CsrfAwareActionInterface` (the
   form-key check is bypassed — gateways cannot send one).
 - **Anonymous** (no Magento customer token) — gateways can't obtain one.
@@ -92,7 +92,7 @@ POST /bixbox/webhook
    │
    ▼
 Controller\Webhook\Index::execute()
-   │  0. read php://input, json_decode → array (else 400)
+   │  0. read request body (getContent()), json_decode → array (else 400)
    │  1. isEnabled()?  else 400
    │  2. token == configured secret (hash_equals)?  else 401
    ▼
@@ -232,7 +232,7 @@ Reproducing the integration run (the helper scripts live in the Docker
 Magento repo, not this deliverable repo):
 
 ```bash
-# from the bixbox-magento Docker repo
+# from your Magento Docker repo
 bin/clinotty php verify_webhook.php     # sets secret, ensures MSI stock, creates 3 tagged orders
 bash webhook_curl_test.sh               # curls the 3 variations + duplicate + 6 negative cases
 ```

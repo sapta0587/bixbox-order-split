@@ -13,11 +13,11 @@
             "received_at": true
         },
         "index": {
-            "BIXBOX_WEBHOOK_LOG_PAYMENT_ID": true,
-            "BIXBOX_WEBHOOK_LOG_PAYLOAD_HASH": true
+            "BIXBOX_WEBHOOK_LOG_PAYMENT_ID": true
         },
         "constraint": {
-            "PRIMARY": true
+            "PRIMARY": true,
+            "BIXBOX_WEBHOOK_LOG_PAYLOAD_HASH": true
         }
     },
     "sales_order_payment": {

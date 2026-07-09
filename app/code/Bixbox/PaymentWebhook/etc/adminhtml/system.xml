@@ -2,7 +2,7 @@
 <!--
     Admin config section. Stores -> Configuration -> Bixbox -> Payment Webhook.
 
-    - Enable: master switch (fail-closed: when disabled the endpoint 404s).
+    - Enable: master switch (fail-closed: when disabled the endpoint returns 400).
     - Shared Secret: the token the gateway must send in the
       X-Bixbox-Webhook-Token header. Empty = refuse all (fail-closed).
 -->
@@ -22,7 +22,7 @@
                 <label>General</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Webhook Endpoint</label>
-                    <comment>Master switch. When disabled the POST /V1/bixbox/payment-webhook route refuses all calls.</comment>
+                    <comment>Master switch. When disabled the POST /bixbox/webhook endpoint refuses all calls.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>

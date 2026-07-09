@@ -34,7 +34,7 @@ The module ships both behaviours:
 
 ```
 .
-├── README.md                       ← this file
+├── README.md                       ← this file (module overview, architecture, assumptions)
 ├── composer.json                   ← test-only autoloader (runs the unit tests without Magento)
 ├── phpunit.xml.dist                ← PHPUnit config (runs both Bixbox modules' tests)
 └── app/code/Bixbox/
@@ -125,31 +125,7 @@ vendor/bin/phpunit -c phpunit.xml.dist
 
 The Magento-bound glue (`QuoteManagementPlugin`, `QuoteDuplicator`,
 `Provider`, `VendorInfo`) is verified by integration testing against a running
-Magento 2.4.6 instance (see "Verification" below).
-
-### Verifying the no-split path (single group)
-
-`OrderSplitter::split()` short-circuits and returns `[]` when all quote items
-share one composite key (single group) — the original quote is then placed
-normally with no behaviour change (`QuoteManagementPlugin.php:75-78`). To
-exercise this end-to-end against a live store:
-
-1. Create **two products with identical** (category, vendor, warehouse area)
-   values — e.g. two paper-roll SKUs both assigned to *Paper Rolls* /
-   *Vendor A* / *Warehouse North*. (The bundled `AddVendorAndWarehouseAttributes`
-   data patch seeds `Vendor A` and `Warehouse North` as options, so this is
-   doable from the admin product form with no extra setup.)
-2. Add both products to a cart and check out.
-3. Expect **one order** containing both items — the plugin detects a single
-   group and falls through to the default `placeOrder`.
-
-> **Indexing note:** when creating products programmatically (not via the
-> admin form), reindex `catalog_product_price`, `catalog_category_product` and
-> `catalog_product_category` and flush `block_html` + `full_page` cache before
-> checking the storefront — the PLP filters by the price index, so a missing
-> price-index row keeps the product off the listing even though it exists in
-> the admin grid. The admin form triggers these indexers automatically;
-> raw scripts do not.
+Mage-OS 3.0.0 instance (see "Verification" below).
 
 ---
 
@@ -203,16 +179,16 @@ were made (as permitted by the brief):
    version-pinned to Magento 2.4.6's Luma template.
 
 9. **Quote-item attribute loading:** `vendor` and `warehouse_area` are added to
-   Magento's `<quote><item><product_attributes>` list via `config.xml` so they
-   are loaded on every quote-item product with no extra DB queries.
+   Magento's `<quote><item><product_attributes>` list via `catalog_attributes.xml`
+   so they are loaded on every quote-item product with no extra DB queries.
 
 ---
 
 ## Verification (integration)
 
 A local **Mage-OS 3.0.0** instance (Magento-compatible community build, based on
-Magento 2.4.7+) was brought up via `markshust/docker-magento` and used to verify
-the module end-to-end against real Magento data:
+Magento 2.4.7+, PHP 8.5) was brought up via `markshust/docker-magento` and used
+to verify the module end-to-end against real Magento data:
 
 | Check | Result |
 |-------|--------|
